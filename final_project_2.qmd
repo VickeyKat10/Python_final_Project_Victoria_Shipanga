@@ -1,0 +1,266 @@
+
+
+```{python}
+import pandas as pd
+import numpy as np
+import plotly.express as px
+```
+
+
+```{python}
+art = pd.read_csv("data/art_coverage_percent_cd4_l_350.csv")
+art
+```
+
+```{python}
+print(type(art))
+```
+
+```{python}
+art.value_counts(dropna=False)
+```
+
+```{python}
+art = art.replace({np.nan:0})
+```
+
+```{python}
+art.tail(10)
+```
+
+```{python}
+summary_art_stats = art.describe().loc[["mean", "min", "max"]]
+print(summary_art_stats)
+```
+
+
+```{python}
+art_long = art.melt(id_vars=['country'], var_name='year', value_name='art_coverage')
+```
+
+```{python}
+art_long['year'] = art_long['year'].astype(int)
+```
+
+```{python}
+fig_box = px.box(art_long, x="year", y="art_coverage", color="year",
+             title="ART Coverage Distribution",
+             labels={"art_coverage": "ART Coverage (%)"})
+fig_box.show()
+```
+
+          
+```{python}
+hiv_deaths = pd.read_csv("data/annual_hiv_deaths_number_all_ages.csv")
+hiv_deaths
+```
+
+```{python}
+print(type(hiv_deaths))
+```
+
+```{python}
+hiv_deaths.value_counts(dropna=False)
+```
+
+```{python}
+def convert_shorthand(value):
+    if isinstance(value, str):
+        value = value.lower().replace(',', '').strip()
+        if 'k' in value:
+            try:
+                return float(value.replace('k', '')) * 1000
+            except ValueError:
+                return np.nan
+        else:
+            try:
+                return float(value)
+            except ValueError:
+                return np.nan
+    return value
+   ```
+
+```{python}
+year_columns = hiv_deaths.columns[1:]
+hiv_deaths[year_columns] = hiv_deaths[year_columns].applymap(convert_shorthand)
+hiv_deaths[year_columns].head()
+```
+
+```{python}
+hiv_deaths[year_columns] = hiv_deaths[year_columns].apply(pd.to_numeric, errors='coerce')
+```
+
+```{python}
+hiv_deaths.dtypes
+```
+
+```{python}
+hiv_deaths[year_columns] = hiv_deaths[year_columns].fillna(0)
+```
+
+```{python}
+hiv_deaths_long= hiv_deaths.melt(
+    id_vars=["country"], var_name="year", value_name="hiv_deaths"
+)
+```
+
+```{python}
+hiv_deaths_long["year"] = hiv_deaths_long["year"].astype(int)
+```
+
+```{python}
+merged_df = pd.merge(art_long, hiv_deaths_long, on=["country", "year"], how="inner")
+```
+
+
+```{python}
+merged_df.fillna(0, inplace=True)
+```
+
+```{python}
+selected_countries = ["South Africa", "Namibia", "Zimbabwe", "Mexico", "Nigeria"]
+```
+
+```{python}
+sub_df = merged_df[
+    (merged_df["country"].isin(selected_countries)) & (merged_df["year"] == 2010)
+]
+```
+
+```{python}
+fig_bar = px.histogram(
+    sub_df,
+    x="country",
+    y="art_coverage",
+    color="country",
+    title=" ART Coverage in selected countries (2010)",
+    labels={"art_coverage": "ART Coverage (%)", "year":"Year"},
+)
+fig_bar.update_layout(showlegend=False)
+fig_bar.show()
+
+## The histogram shows the ART coverge in selected countries for the year 2010, with Namibia having the highest coverage while Nigeria is the least with only about 30% coverage.
+```
+```{python}
+namibia_art_cov = art_long.query('country == "Namibia"')
+```
+
+```{python}
+fig_namibia_bar = px.bar(namibia_art_cov, x='year', y='art_coverage', title=" ART Coverage in Namibia per year",
+labels={"art_coverage": "ART Coverage (%)"},
+)
+fig_namibia_bar.show()
+```
+## The above bar cahrt shows an increase of ART coverage in Namibia over the years from 2004 - 2011.
+
+```{python}
+namibia_hiv_deaths = hiv_deaths_long.query('country == "Namibia"')
+```
+
+```{python}
+fig_namibia_line = px.line(
+    namibia_hiv_deaths,
+    x="year",
+    y="hiv_deaths",
+    title=" Annual Total HIV deaths, Namibia (1990-2010)",
+    labels={"hiv_deaths": "HIV deaths (Number)", "year": "Year"},
+    markers=True,
+)
+fig_namibia_line.show()
+```
+## The linegraph depicts a gradual increase in the number of HIV deaths from 1990 - 2005 and a gradual decrease from 2005 onwards.
+
+
+
+```{python}
+bar_chart = px.bar(sub_df, x="country", y="art_coverage", title="ART coverage in different countries (2010)")
+bar_chart.show()
+
+## Among the five selected countries, Namibia (90%)has a higher ART coverage followed by Mexico (79%). While Nigeria has the lowest ART coverage.
+
+```
+
+
+```{python}
+px.scatter(
+    merged_df,
+    x="art_coverage",
+    y="hiv_deaths",
+    labels={"hiv_deaths": "HIV deaths (Number)", "art_coverage": "ART coverage (%)"},
+    title="Relationship between ART coverage and HIV Deaths",
+)
+## The scatter graph indicates that high ART coverage decreases the number of HIV deaths. 
+```
+
+```{python}
+px.violin(hiv_deaths_long, y="hiv_deaths", box=True)
+```
+
+```{python}
+px.violin(hiv_deaths_long, y="hiv_deaths", x="country", box=True)
+```
+
+```{python}
+hiv_deaths["2000"].describe()
+```
+
+```{python}
+hiv_deaths_2000 = (hiv_deaths_long.query("year==2000"))
+hiv_deaths_2000.head()
+```
+
+```{python}
+fig = px.choropleth(
+    hiv_deaths_2000, 
+    locations="country",
+    locationmode="country names",
+    color="hiv_deaths",  
+    title="Global HIV Deaths (2000)",
+    color_continuous_scale="Reds",
+)
+fig.show()
+
+## South Africa, Zimbambwe, Nigeria, India, Kenya and Tanzania  have experienced higher HID deaths in 2000.
+```
+
+
+```{python}
+fig_histogram=px.histogram(hiv_deaths_2000,        x="hiv_deaths",
+y="country",
+labels={"sum of HIV deaths (Number)": "HIV deaths (Number)", "country": "Country"},
+title="HIV Deaths in 2000")
+fig_histogram.show()
+```
+
+```{python}
+top_countries = merged_df.groupby("country")["hiv_deaths"].sum().nlargest(10).index
+hiv_deaths_long_top = merged_df[merged_df["country"].isin(top_countries)]
+```
+
+
+```{python}
+px.scatter(hiv_deaths_long_top, x="hiv_deaths", 
+y="art_coverage", 
+size="hiv_deaths",
+title="Relationship between HIV Deaths and ART coverage (Top 10 Countries")
+
+## The lower the ART coverage, the higher the HIV deaths in top countries. 
+```
+
+
+```{python}
+available_years = hiv_deaths_long.columns[1:]
+selected_years = [year for year in ['2004', '2008', '2010', '2011'] if year in available_years]
+selected_countries = ['South Africa', 'India', 'Nigeria', 'Russia', 'USA']
+```
+
+```{python}
+hiv_deaths_long_filtered = hiv_deaths_long[hiv_deaths_long['country'].isin(selected_countries)][['country'] + selected_years]
+```
+
+```{python}
+fig_grouped_hist = px.histogram(hiv_deaths_long_filtered, x='country', color="country", barnorm="percent",title="Grouped Histogram of HIV Deaths by country", barmode='overlay',
+     color_discrete_sequence=['#deb221', '#2f828a'])
+fig_grouped_hist.show()
+
+```

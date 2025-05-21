@@ -1,0 +1,10 @@
+```{python}
+title: "Final Project Report"
+author: "Victoria Shipanga"
+format: html
+```
+
+```{python}
+from itables import show
+import plotly.express as px
+```

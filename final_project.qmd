@@ -1,0 +1,35 @@
+
+```{python}
+import pandas as pd
+import numpy as np
+import plotly.express as px
+```
+
+
+```{python}
+lex = pd.read_csv("data/lex.csv")
+lex
+```
+
+
+```{python}
+sanitation=pd.read_csv("data/at_least_basic_sanitation_overall_access_percent.csv")
+sanitation
+```
+
+
+```{python}
+lex_sanitation= pd.merge(lex, sanitation, on="country")
+lex_sanitation
+```
+
+```{python}
+selected_countries = ["South Africa", "Namibia", "Zimbabwe", "Zambia", "Nigeria", "India", "Angola", "China", "Finland", "UK"]
+sub_lex_sanitation =[lex_sanitation['country'].isin(selected_countries)]
+```
+
+
+```{python}
+print(type(sub_lex_sanitation))
+```
+

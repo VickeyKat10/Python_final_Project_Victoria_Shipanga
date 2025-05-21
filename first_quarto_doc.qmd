@@ -1,0 +1,38 @@
+# Section
+
+Hello
+
+# Section
+
+World
+
+
+```{python}
+2+2
+```
+```{python}
+import cowsay
+```
+
+```{python}
+import plotly.express as px
+from itables import show
+```
+
+```{python}
+tips = px.data.tips()
+show(tips)
+```
+
+```{python}
+tips=px.data.tips()
+tips_sex=px.violin(tips, x="day", y="total_bill", color="sex")
+tips_sex.show()
+```
+
+```{python}
+```
+
+```{python}
+import pandas as pd
+```
