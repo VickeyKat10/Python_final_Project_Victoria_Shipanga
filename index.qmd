@@ -1,8 +1,10 @@
-```{python}
+---
 title: "Final Project Report"
 author: "Victoria Shipanga"
 format: html
-```
+---
+
+This is the final project report showing different visualisations for ART coverage and HIV deaths in different countries.
 
 ```{python}
 from itables import show
@@ -88,7 +90,7 @@ def convert_shorthand(value):
             except ValueError:
                 return np.nan
     return value
-   ```
+```
 
 ```{python}
 year_columns = hiv_deaths.columns[1:]
