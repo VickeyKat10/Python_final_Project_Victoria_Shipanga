@@ -8,7 +8,7 @@
         "author: \"Victoria Shipanga\"\n",
         "format: html"
       ],
-      "id": "3106abce",
+      "id": "c3cb613d",
       "execution_count": null,
       "outputs": []
     },
@@ -19,7 +19,7 @@
         "from itables import show\n",
         "import plotly.express as px"
       ],
-      "id": "83e63e22",
+      "id": "a7d30271",
       "execution_count": null,
       "outputs": []
     },
@@ -31,7 +31,7 @@
         "import numpy as np\n",
         "import plotly.express as px"
       ],
-      "id": "3fcf86a3",
+      "id": "a1808ec8",
       "execution_count": null,
       "outputs": []
     },
@@ -42,7 +42,7 @@
         "art = pd.read_csv(\"data/art_coverage_percent_cd4_l_350.csv\")\n",
         "art"
       ],
-      "id": "d02ec02c",
+      "id": "acb5e0eb",
       "execution_count": null,
       "outputs": []
     },
@@ -52,7 +52,7 @@
       "source": [
         "print(type(art))"
       ],
-      "id": "fb9735b9",
+      "id": "afabb4cd",
       "execution_count": null,
       "outputs": []
     },
@@ -62,7 +62,7 @@
       "source": [
         "art.value_counts(dropna=False)"
       ],
-      "id": "8faee178",
+      "id": "f25ca11c",
       "execution_count": null,
       "outputs": []
     },
@@ -72,7 +72,7 @@
       "source": [
         "art = art.replace({np.nan:0})"
       ],
-      "id": "70f6f7d4",
+      "id": "b54f4e62",
       "execution_count": null,
       "outputs": []
     },
@@ -82,7 +82,7 @@
       "source": [
         "art.tail(10)"
       ],
-      "id": "a72530b8",
+      "id": "99afeba2",
       "execution_count": null,
       "outputs": []
     },
@@ -93,7 +93,7 @@
         "summary_art_stats = art.describe().loc[[\"mean\", \"min\", \"max\"]]\n",
         "print(summary_art_stats)"
       ],
-      "id": "8a7976b6",
+      "id": "8020db43",
       "execution_count": null,
       "outputs": []
     },
@@ -103,7 +103,7 @@
       "source": [
         "art_long = art.melt(id_vars=['country'], var_name='year', value_name='art_coverage')"
       ],
-      "id": "a56955a9",
+      "id": "f64b6683",
       "execution_count": null,
       "outputs": []
     },
@@ -113,7 +113,7 @@
       "source": [
         "art_long['year'] = art_long['year'].astype(int)"
       ],
-      "id": "91bd804b",
+      "id": "786fd2e9",
       "execution_count": null,
       "outputs": []
     },
@@ -126,7 +126,7 @@
         "             labels={\"art_coverage\": \"ART Coverage (%)\"})\n",
         "fig_box.show()"
       ],
-      "id": "1bc04973",
+      "id": "707463a8",
       "execution_count": null,
       "outputs": []
     },
@@ -137,7 +137,7 @@
         "hiv_deaths = pd.read_csv(\"data/annual_hiv_deaths_number_all_ages.csv\")\n",
         "hiv_deaths"
       ],
-      "id": "aeb6aab4",
+      "id": "3158be47",
       "execution_count": null,
       "outputs": []
     },
@@ -147,7 +147,7 @@
       "source": [
         "print(type(hiv_deaths))"
       ],
-      "id": "01a66f56",
+      "id": "a3914b50",
       "execution_count": null,
       "outputs": []
     },
@@ -157,7 +157,7 @@
       "source": [
         "hiv_deaths.value_counts(dropna=False)"
       ],
-      "id": "de2ab271",
+      "id": "a3f84af2",
       "execution_count": null,
       "outputs": []
     },
@@ -186,7 +186,7 @@
         "hiv_deaths[year_columns] = hiv_deaths[year_columns].applymap(convert_shorthand)\n",
         "hiv_deaths[year_columns].head()"
       ],
-      "id": "e7c1f7df",
+      "id": "fe83ef16",
       "execution_count": null,
       "outputs": []
     },
@@ -196,7 +196,7 @@
       "source": [
         "hiv_deaths[year_columns] = hiv_deaths[year_columns].apply(pd.to_numeric, errors='coerce')"
       ],
-      "id": "a579303e",
+      "id": "48a62e40",
       "execution_count": null,
       "outputs": []
     },
@@ -206,7 +206,7 @@
       "source": [
         "hiv_deaths.dtypes"
       ],
-      "id": "9dd4514c",
+      "id": "f7aee577",
       "execution_count": null,
       "outputs": []
     },
@@ -216,7 +216,7 @@
       "source": [
         "hiv_deaths[year_columns] = hiv_deaths[year_columns].fillna(0)"
       ],
-      "id": "5f37fe60",
+      "id": "893d8875",
       "execution_count": null,
       "outputs": []
     },
@@ -228,7 +228,7 @@
         "    id_vars=[\"country\"], var_name=\"year\", value_name=\"hiv_deaths\"\n",
         ")"
       ],
-      "id": "c461ee09",
+      "id": "c59d876b",
       "execution_count": null,
       "outputs": []
     },
@@ -238,7 +238,7 @@
       "source": [
         "hiv_deaths_long[\"year\"] = hiv_deaths_long[\"year\"].astype(int)"
       ],
-      "id": "9a66bf80",
+      "id": "5713d241",
       "execution_count": null,
       "outputs": []
     },
@@ -248,7 +248,7 @@
       "source": [
         "merged_df = pd.merge(art_long, hiv_deaths_long, on=[\"country\", \"year\"], how=\"inner\")"
       ],
-      "id": "332fc34a",
+      "id": "23c4b215",
       "execution_count": null,
       "outputs": []
     },
@@ -258,7 +258,7 @@
       "source": [
         "merged_df.fillna(0, inplace=True)"
       ],
-      "id": "4b950541",
+      "id": "0f88f3a0",
       "execution_count": null,
       "outputs": []
     },
@@ -268,7 +268,7 @@
       "source": [
         "selected_countries = [\"South Africa\", \"Namibia\", \"Zimbabwe\", \"Mexico\", \"Nigeria\"]"
       ],
-      "id": "b51ad090",
+      "id": "4ff67bfd",
       "execution_count": null,
       "outputs": []
     },
@@ -280,7 +280,7 @@
         "    (merged_df[\"country\"].isin(selected_countries)) & (merged_df[\"year\"] == 2010)\n",
         "]"
       ],
-      "id": "07aa5a9e",
+      "id": "e8319389",
       "execution_count": null,
       "outputs": []
     },
@@ -301,7 +301,7 @@
         "\n",
         "## The histogram shows the ART coverge in selected countries for the year 2010, with Namibia having the highest coverage while Nigeria is the least with only about 30% coverage."
       ],
-      "id": "77fc5072",
+      "id": "ef4f08fa",
       "execution_count": null,
       "outputs": []
     },
@@ -311,7 +311,7 @@
       "source": [
         "namibia_art_cov = art_long.query('country == \"Namibia\"')"
       ],
-      "id": "2ca97cb7",
+      "id": "61d5845f",
       "execution_count": null,
       "outputs": []
     },
@@ -324,7 +324,7 @@
         ")\n",
         "fig_namibia_bar.show()"
       ],
-      "id": "63825e7a",
+      "id": "2604408d",
       "execution_count": null,
       "outputs": []
     },
@@ -334,7 +334,7 @@
       "source": [
         "## The above bar cahrt shows an increase of ART coverage in Namibia over the years from 2004 - 2011.\n"
       ],
-      "id": "b98f6962"
+      "id": "869cff9b"
     },
     {
       "cell_type": "code",
@@ -342,7 +342,7 @@
       "source": [
         "namibia_hiv_deaths = hiv_deaths_long.query('country == \"Namibia\"')"
       ],
-      "id": "674059f8",
+      "id": "2c94fbcc",
       "execution_count": null,
       "outputs": []
     },
@@ -360,7 +360,7 @@
         ")\n",
         "fig_namibia_line.show()"
       ],
-      "id": "a90c2ee9",
+      "id": "f159824b",
       "execution_count": null,
       "outputs": []
     },
@@ -370,7 +370,7 @@
       "source": [
         "## The linegraph depicts a gradual increase in the number of HIV deaths from 1990 - 2005 and a gradual decrease from 2005 onwards.\n"
       ],
-      "id": "786d4023"
+      "id": "df618c42"
     },
     {
       "cell_type": "code",
@@ -381,7 +381,7 @@
         "\n",
         "## Among the five selected countries, Namibia (90%)has a higher ART coverage followed by Mexico (79%). While Nigeria has the lowest ART coverage."
       ],
-      "id": "75c3ccac",
+      "id": "db111920",
       "execution_count": null,
       "outputs": []
     },
@@ -398,7 +398,7 @@
         ")\n",
         "## The scatter graph indicates that high ART coverage decreases the number of HIV deaths. "
       ],
-      "id": "20465d13",
+      "id": "763ced22",
       "execution_count": null,
       "outputs": []
     },
@@ -408,7 +408,7 @@
       "source": [
         "px.violin(hiv_deaths_long, y=\"hiv_deaths\", box=True)"
       ],
-      "id": "f75be0db",
+      "id": "9ccf1e03",
       "execution_count": null,
       "outputs": []
     },
@@ -418,7 +418,7 @@
       "source": [
         "px.violin(hiv_deaths_long, y=\"hiv_deaths\", x=\"country\", box=True)"
       ],
-      "id": "ca2694eb",
+      "id": "31f7ceac",
       "execution_count": null,
       "outputs": []
     },
@@ -428,7 +428,7 @@
       "source": [
         "hiv_deaths[\"2000\"].describe()"
       ],
-      "id": "1ef22461",
+      "id": "a6b0d324",
       "execution_count": null,
       "outputs": []
     },
@@ -439,7 +439,7 @@
         "hiv_deaths_2000 = (hiv_deaths_long.query(\"year==2000\"))\n",
         "hiv_deaths_2000.head()"
       ],
-      "id": "3354b472",
+      "id": "264b1920",
       "execution_count": null,
       "outputs": []
     },
@@ -459,7 +459,7 @@
         "\n",
         "## South Africa, Zimbambwe, Nigeria, India, Kenya and Tanzania  have experienced higher HID deaths in 2000."
       ],
-      "id": "d5149f50",
+      "id": "cffdf12c",
       "execution_count": null,
       "outputs": []
     },
@@ -473,7 +473,7 @@
         "title=\"HIV Deaths in 2000\")\n",
         "fig_histogram.show()"
       ],
-      "id": "f431e6f4",
+      "id": "88589303",
       "execution_count": null,
       "outputs": []
     },
@@ -484,7 +484,7 @@
         "top_countries = merged_df.groupby(\"country\")[\"hiv_deaths\"].sum().nlargest(10).index\n",
         "hiv_deaths_long_top = merged_df[merged_df[\"country\"].isin(top_countries)]"
       ],
-      "id": "24efc29f",
+      "id": "f9c30e98",
       "execution_count": null,
       "outputs": []
     },
@@ -499,7 +499,7 @@
         "\n",
         "## The lower the ART coverage, the higher the HIV deaths in top countries. "
       ],
-      "id": "b641d04a",
+      "id": "c3c737b5",
       "execution_count": null,
       "outputs": []
     },
@@ -511,7 +511,7 @@
         "selected_years = [year for year in ['2004', '2008', '2010', '2011'] if year in available_years]\n",
         "selected_countries = ['South Africa', 'India', 'Nigeria', 'Russia', 'USA']"
       ],
-      "id": "24a1b086",
+      "id": "2c4feb41",
       "execution_count": null,
       "outputs": []
     },
@@ -521,7 +521,7 @@
       "source": [
         "hiv_deaths_long_filtered = hiv_deaths_long[hiv_deaths_long['country'].isin(selected_countries)][['country'] + selected_years]"
       ],
-      "id": "ec9cf9fc",
+      "id": "d397ab32",
       "execution_count": null,
       "outputs": []
     },
@@ -533,7 +533,7 @@
         "     color_discrete_sequence=['#deb221', '#2f828a'])\n",
         "fig_grouped_hist.show()"
       ],
-      "id": "9d7eb85c",
+      "id": "e10fc395",
       "execution_count": null,
       "outputs": []
     }
